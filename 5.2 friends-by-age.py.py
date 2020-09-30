@@ -8,7 +8,9 @@ def parseLine(line):
     age = int(fields[2])
     numFriends = int(fields[3])
     return (age, numFriends)
-
+wordCounts = words.map(lambda x: (x, 1)).reduceByKey(lambda x, y: x + y)
+wordCountsSorted = wordCounts.map(lambda x: (x[1], x[0])).sortByKey()
+results = wordCountsSorted.collect()
 lines = sc.textFile("file:///SparkCourse/fakefriends.csv")
 rdd = lines.map(parseLine)
 totalsByAge = rdd.mapValues(lambda x: (x, 1)).reduceByKey(lambda x, y: (x[0] + y[0], x[1] + y[1]))
